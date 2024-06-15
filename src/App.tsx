@@ -4,13 +4,12 @@ import { Container, Layout } from "./styled";
 import { BoxMenu, Menu, WrapBoxMenu } from "./components/Minecraft/styled";
 import { numberOfSequence } from "./components/Minecraft/Block/generateBlocks";
 
-const numberBlocksConstant = 1000;
+const numberBlocksConstant = 10;
 const numberBlocks = new Array(numberBlocksConstant).fill(1);
 const maxBlockStack = 64;
-
+let count = 0;
 function App() {
   const [fillBlocks, setFillBlocks] = useState(numberBlocks);
-
   const [inventary, setInventary] = useState<{
     space: null | { blocks: number[]; count: number };
     space2?: null | { blocks: number[]; count: number };
@@ -28,7 +27,7 @@ function App() {
     let current = 0;
     for (let index = 0; index < 30; index++) {
       if (current < 5) {
-        newFillBlocks[`layer${index}`] = new Array(numberBlocksConstant).fill(
+        newFillBlocks[`${index}`] = new Array(numberBlocksConstant).fill(
           numberOfSequence(index)
         );
       } else {
@@ -36,7 +35,10 @@ function App() {
       }
       current++;
     }
+
+    return newFillBlocks;
   };
+  const mapWorld: number[][] = Object.values(createWorld());
 
   const savedMinedBlocks = () => {
     const filterGetBlocks = fillBlocks.filter((block) => block === 0);
@@ -54,11 +56,23 @@ function App() {
     index: number
   ) => {
     event.stopPropagation();
-    const mapNumberBlocks = fillBlocks.map((block, i) =>
-      index === i ? 0 : block
-    );
+    //buscar en el array principal el indice afectado
+    //compararlo con el otro array identico, pero de un bloque diferente
+    //cambiar el valor del indice por el del nuevo array
+    //enviar el nuevo estado para actualizar
+    count++;
+    const findOfIndex = mapWorld[count][index];
+    console.log(findOfIndex);
+    const mapNumberBlocks = fillBlocks.map((block, i) => {
+      return i === index ? findOfIndex : block;
+    });
 
+    // const mapNumberBlocks = fillBlocks.map((block, i) =>
+    //   index === i ? 0 : block
+    // );
+    console.log(mapNumberBlocks);
     setFillBlocks(mapNumberBlocks);
+
     savedMinedBlocks();
   };
 
@@ -73,9 +87,6 @@ function App() {
     setFillBlocks(mapNumberBlocks);
   };
 
-  useEffect(() => {
-    createWorld();
-  }, []);
   return (
     <>
       <Layout layer={3}>

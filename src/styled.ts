@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Layout = styled.div<{ position?: string; layer?: number }>`
   width: 100%;
   height: 2000px;
-  background-color: gray;
+  background-color: lightblue;
   z-index: ${({ layer }) => layer && layer};
   display: flex;
   flex-direction: column;
