@@ -1,18 +1,24 @@
-const blocks = {
-  void: {
+const blocks = [
+  {
     id: 0,
     name: "void",
+    ico: "",
   },
-  grass: {
+  {
     id: 1,
-    name: "void",
+    name: "grass",
+    ico: "/block-terra.jpg",
   },
-  stone: 2,
-  diamond: 3,
-  gold: 4,
-  iron: 5,
-  sand: 6,
-  redstone: 7,
-};
+  { id: 2, name: "stone", ico: "/block-stone.jpg" },
+  { id: 3, name: "diamond", ico: "" },
+  {
+    id: 4,
+    name: "gold",
+    ico: "",
+  },
+  { id: 5, name: "iron", ico: "" },
+  { id: 6, name: "sand", ico: "" },
+  { id: 7, name: "redstone", ico: "" },
+];
 
 export default blocks;

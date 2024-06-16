@@ -1,14 +1,8 @@
 import React from "react";
-import { Block } from "./styled";
+import { Container } from "./styled";
 
-const Minecraft = ({
-  index,
-  disabled,
-}: {
-  index: number;
-  disabled: boolean;
-}) => {
-  return <Block disabled={disabled} index={index}></Block>;
+const Block = (props: { index: number; icoUrl: string }) => {
+  return <Container {...props}></Container>;
 };
 
-export default Minecraft;
+export default Block;

@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
-export const Block = styled.div<{ index: number; disabled: boolean }>`
+export const Container = styled.div<{
+  index: number;
+  icoUrl: string;
+}>`
   min-width: 80px;
   min-height: 80px;
   box-sizing: border-box;
@@ -9,14 +12,7 @@ export const Block = styled.div<{ index: number; disabled: boolean }>`
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  ${({ disabled }) =>
-    disabled
-      ? ``
-      : `
- background-image: url("/block-terra.jpg");
-
- 
-      `};
+  background-image: ${({ icoUrl }) => icoUrl && `url(${icoUrl})`};
 `;
 
 export const WrapBoxMenu = styled.div`

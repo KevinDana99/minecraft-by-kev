@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Minecraft from "./components/Minecraft";
 import { Container, Layout } from "./styled";
 import { BoxMenu, Menu, WrapBoxMenu } from "./components/Minecraft/styled";
 import { numberOfSequence } from "./components/Minecraft/Block/generateBlocks";
+import Block from "./components/Minecraft";
+import blocks from "./components/Minecraft/Block/blocks";
 
 const numberBlocksConstant = 10;
 const numberBlocks = new Array(numberBlocksConstant).fill(1);
 const maxBlockStack = 64;
-let count = 0;
+
 function App() {
+  const [cacheBlocks, setCacheBlocks] = useState<
+    { id: number; count: number }[] | []
+  >([]);
   const [fillBlocks, setFillBlocks] = useState(numberBlocks);
   const [inventary, setInventary] = useState<{
     space: null | { blocks: number[]; count: number };
@@ -56,24 +61,26 @@ function App() {
     index: number
   ) => {
     event.stopPropagation();
-    //buscar en el array principal el indice afectado
-    //compararlo con el otro array identico, pero de un bloque diferente
-    //cambiar el valor del indice por el del nuevo array
-    //enviar el nuevo estado para actualizar
-    count++;
-    const findOfIndex = mapWorld[count][index];
-    console.log(findOfIndex);
-    const mapNumberBlocks = fillBlocks.map((block, i) => {
-      return i === index ? findOfIndex : block;
-    });
 
-    // const mapNumberBlocks = fillBlocks.map((block, i) =>
-    //   index === i ? 0 : block
-    // );
-    console.log(mapNumberBlocks);
-    setFillBlocks(mapNumberBlocks);
+    const cache = cacheBlocks.filter((element) => element.id === index);
 
+    if (cache.length === 0) {
+      setCacheBlocks([...cacheBlocks, { id: index, count: 1 }]);
+    } else {
+      setCacheBlocks((prevCacheBlocks) =>
+        prevCacheBlocks.map((block) =>
+          block.id === index ? { ...block, count: block.count + 1 } : block
+        )
+      );
+
+      const findOfIndex = mapWorld[cache[0].count][index];
+      const mapNumberBlocks = fillBlocks.map((block, i) => {
+        return i === index ? findOfIndex : block;
+      });
+      setFillBlocks(mapNumberBlocks);
+    }
     savedMinedBlocks();
+    console.log(fillBlocks);
   };
 
   const addBlock = (
@@ -87,20 +94,18 @@ function App() {
     setFillBlocks(mapNumberBlocks);
   };
 
+  const findIcoWithIndex = (id: number) => {
+    const foundIco = blocks.filter((block) => block.id === id);
+    return foundIco[0];
+  };
   return (
     <>
       <Layout layer={3}>
-        {fillBlocks?.map((element, index) =>
-          element === 1 ? (
-            <Container onClick={(e) => mineBlock(e, index)}>
-              <Minecraft index={index} disabled={false} />
-            </Container>
-          ) : (
-            <Container onClick={(e) => addBlock(e, index)}>
-              <Minecraft index={index} disabled={true} />
-            </Container>
-          )
-        )}
+        {fillBlocks?.map((element, index) => (
+          <Container onClick={(e) => mineBlock(e, index)}>
+            <Block index={index} icoUrl={findIcoWithIndex(element).ico} />
+          </Container>
+        ))}
         <Menu>
           <WrapBoxMenu>
             <BoxMenu type={inventary?.space?.blocks?.[0] ?? -1}>
