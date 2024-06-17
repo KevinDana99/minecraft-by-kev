@@ -11,7 +11,7 @@ export const Container = styled.div<{
   height: 80px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
   background-image: ${({ icoUrl }) => icoUrl && `url(${icoUrl})`};
 `;
 
@@ -22,7 +22,7 @@ export const WrapBoxMenu = styled.div`
   display: flex;
   justify-content: center;
 `;
-export const BoxMenu = styled.div<{ type: number }>`
+export const BoxMenu = styled.div<{ icoUrl?: string }>`
   width: 45px;
   height: 50px;
   background-position: center;
@@ -34,11 +34,21 @@ export const BoxMenu = styled.div<{ type: number }>`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  ${({ type }) =>
-    type === 0 &&
-    `
- background-image: url("/block-terra.jpg");
-      `}
+  background-image: ${({ icoUrl }) => icoUrl && `url(${icoUrl})`};
+  cursor: pointer;
+`;
+export const BoxMenuInv = styled.div<{ icoUrl?: string }>`
+  width: 60px;
+  height: 50px;
+  border-right: ridge 5px darkgray;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #515151;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
 `;
 export const Menu = styled.div`
   background-color: rgba(0, 0, 0, 0.382);
