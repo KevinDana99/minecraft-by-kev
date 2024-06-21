@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { CrafterType, CraftType } from "../types";
+import blocks from "../../Minecraft/data/blocks";
 
-const useInventory = () => {
+const useInventory = (
+  selectedBlock: {
+    id: number;
+    type: number;
+    count: number;
+  } | null
+) => {
   const craftInitialState = {
     id: -1,
     name: null,
@@ -19,13 +26,15 @@ const useInventory = () => {
     new Array(12).fill(craftInitialState)
   );
 
-  const handleUpdateCraft = (index: number, newValues: CraftType) => {
-    setCraft((prevCraft) => {
-      const updatedCraft = [...prevCraft];
-      const updatedObject = { ...updatedCraft[index], ...newValues };
-      updatedCraft[index] = updatedObject;
-      return updatedCraft;
-    });
+  const handleUpdateCraft = (idCraft: number) => {
+    const currentBlock = blocks.filter(
+      (block) => block.id === selectedBlock?.type
+    );
+
+    const mapCraft = craft.map((el, index) =>
+      index === idCraft ? { ...currentBlock[0], count: el.count + 1 } : el
+    );
+    currentBlock[0]?.craft && setCraft(mapCraft);
   };
 
   const handleUpdateInv = (index: number, newValues: CraftType) => {
@@ -53,6 +62,7 @@ const useInventory = () => {
     handleUpdateCraft,
     handleUpdateInv,
     handleSavedBlock,
+    setCraft,
   };
 };
 

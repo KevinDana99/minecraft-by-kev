@@ -19,7 +19,7 @@ import useInventory from "./hooks/useInventory";
 
 const Inventory = ({ closeAction, selectedBlock }: InventoryType) => {
   const { cacheInv, craft, handleUpdateCraft, handleSavedBlock } =
-    useInventory();
+    useInventory(selectedBlock);
 
   const findResultCraft = () => {
     const findCraftInBlocks = blocks.filter(
@@ -28,17 +28,6 @@ const Inventory = ({ closeAction, selectedBlock }: InventoryType) => {
     const findCraft = craft.find((block) => block.count !== 0);
     const match = findCraft?.count === findCraftInBlocks[0]?.craft?.length;
     return match ? findCraftInBlocks[0] : null;
-  };
-
-  const onCraft = (idCraft: number) => {
-    const canCraft = blocks.find(
-      (block) =>
-        block.id === selectedBlock?.type &&
-        block.craft &&
-        block.craft?.length > 0
-    );
-
-    canCraft && handleUpdateCraft(idCraft, { ...canCraft, count: 1 });
   };
 
   const resultCraft = findResultCraft();
@@ -60,7 +49,7 @@ const Inventory = ({ closeAction, selectedBlock }: InventoryType) => {
           <CraftDivider>
             <Craft>
               {craft.map((block, index) => (
-                <Space onClick={() => onCraft(index)}>
+                <Space onClick={() => handleUpdateCraft(index)}>
                   <BoxMenu
                     icoUrl={
                       findIcoWithIndex(craft[index]?.id)?.inventoryIco ??

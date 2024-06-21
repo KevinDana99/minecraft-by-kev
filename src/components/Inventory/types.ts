@@ -1,6 +1,6 @@
 export type InventoryType = {
   closeAction: () => void;
-  selectedBlock?: {
+  selectedBlock: {
     id: number;
     type: number;
     count: number;
