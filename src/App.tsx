@@ -10,6 +10,7 @@ import { numberOfSequence } from "./components/Minecraft/data/generateBlocks";
 import Block from "./components/Minecraft";
 import blocks from "./components/Minecraft/data/blocks";
 import Inventory from "./components/Inventory";
+import { findIcoWithIndex } from "./components/Minecraft/utils";
 
 const numberBlocksConstant = 1000;
 const numberBlocks = new Array(numberBlocksConstant).fill(1);
@@ -19,13 +20,22 @@ function App() {
   const [cacheBlocks, setCacheBlocks] = useState<
     { id: number; count: number }[] | []
   >([]);
-  const [fillBlocks, setFillBlocks] = useState<number[]>(numberBlocks);
+  const [fillBlocks, setFillBlocks] = useState<number[]>([
+    999999,
+    ...numberBlocks,
+  ]);
 
   const [inventory, setInventory] = useState<
     { id: number; type: number; count: number }[]
   >([]);
 
   const [visibleInventory, setVisibleInventory] = useState(false);
+
+  const [selectedBlock, setSelectedBlock] = useState<{
+    id: number;
+    type: number;
+    count: number;
+  } | null>(null);
 
   const createWorld = () => {
     let newFillBlocks: any = {};
@@ -105,31 +115,53 @@ function App() {
     setFillBlocks(mapNumberBlocks);
   };
 
-  const findIcoWithIndex = (id: number) => {
-    const foundIco = blocks.filter((block) => block.id === id);
-    return foundIco[0];
-  };
-
   const openInventory = () => {
     setVisibleInventory(true);
   };
   const closeInventory = () => {
     setVisibleInventory(false);
   };
+
+  const selectCurrentBlock = (block: {
+    id: number;
+    type: number;
+    count: number;
+  }) => {
+    setSelectedBlock(block);
+  };
+
+  const delayMineBlock = (
+    timeOut: number,
+    callback: (
+      event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+      index: number
+    ) => void
+  ) => {
+    setTimeout(callback, timeOut);
+  };
   return (
     <>
       <Layout layer={3}>
-        {visibleInventory && <Inventory closeAction={closeInventory} />}
+        {visibleInventory && (
+          <Inventory
+            closeAction={closeInventory}
+            selectedBlock={selectedBlock}
+          />
+        )}
         {fillBlocks?.map((element, index) => (
-          <Container onClick={(e) => mineBlock(e, index)}>
-            <Block index={index} icoUrl={findIcoWithIndex(element).ico} />
-          </Container>
+          <div
+            onMouseDown={(e) => {
+              mineBlock(e, index);
+            }}
+          >
+            <Block icoUrl={findIcoWithIndex(element).ico} />
+          </div>
         ))}
         <Menu>
           <BoxMenuInv onClick={openInventory}>...</BoxMenuInv>
 
           {inventory.map((space) => (
-            <WrapBoxMenu>
+            <WrapBoxMenu onClick={() => selectCurrentBlock(space)}>
               <BoxMenu
                 icoUrl={
                   findIcoWithIndex(space.type).inventoryIco ??

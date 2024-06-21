@@ -80,6 +80,9 @@ export const Space = styled.div`
   height: 50px;
   background-color: #747474;
   border: ridge 5px #989898;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const CloseButton = styled.button`

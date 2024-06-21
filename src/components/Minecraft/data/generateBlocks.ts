@@ -1,5 +1,6 @@
 function generateSequence(repetitions: number, maxNumber: number) {
   let sequence = [];
+
   for (let i = 1; i <= maxNumber; i++) {
     for (let j = 0; j < repetitions; j++) {
       sequence.push(i);
